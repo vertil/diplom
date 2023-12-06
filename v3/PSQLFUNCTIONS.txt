@@ -1,0 +1,170 @@
+CREATE OR REPLACE FUNCTION worker_day_visits
+		(IN date_f date,IN per_in integer)
+	returns TABLE (
+		p_date timestamp,
+		cab integer,
+		pos boolean
+	)
+	AS
+$$
+DECLARE
+BEGIN
+	return query				
+		select 
+		public.in_out_date.time as p_date, 		
+		public.cameras.cab_id as cab,		
+		public.cameras.in_pos as pos
+		from public.in_out_date		
+		
+		INNER JOIN	 public.cameras 
+		ON public.in_out_date.cam_id=public.cameras.id
+		and DATE(public.in_out_date.time)=date_f 
+		
+		;
+end;
+$$
+LANGUAGE 'plpgsql'
+--------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION worker_day_visits_pos
+		(IN date_f date,IN per_in integer, IN pos_in boolean)
+	returns TABLE (
+		p_date timestamp,
+		cab integer
+	)
+	AS
+$$
+DECLARE
+BEGIN
+	return query				
+		select 
+		public.in_out_date.time as p_date, 		
+		public.cameras.cab_id as cab		
+		
+		from public.in_out_date		
+		
+		INNER JOIN	 public.cameras 
+		ON public.in_out_date.cam_id=public.cameras.id
+		and DATE(public.in_out_date.time)=date_f and public.cameras.in_pos=pos_in
+		
+		;
+end;
+$$
+LANGUAGE 'plpgsql'
+--------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION cab_visits
+		(IN date_f date,IN cab_in integer)
+	returns TABLE (
+		date_o timestamp,
+		per integer
+	)
+	AS
+$$
+DECLARE
+BEGIN
+	return query				
+		select 
+				
+		public.in_out_date.time as date_o,		
+		public.in_out_date.per_id as per
+		
+		from public.in_out_date		
+		
+		INNER JOIN	 public.cameras 
+		ON public.in_out_date.cam_id=public.cameras.id
+		and DATE(public.in_out_date.time)=date_f 
+		and public.cameras.cab_id=cab_in
+		;
+end;
+$$
+LANGUAGE 'plpgsql'
+-----------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION cab_visits_pos
+		(IN date_f date,IN cab_in integer, IN pos boolean)
+	returns TABLE (
+		date_o timestamp,
+		per integer
+	)
+	AS
+$$
+DECLARE
+BEGIN
+	return query				
+		select 
+				
+		public.in_out_date.time as date_o,		
+		public.in_out_date.per_id as per
+		
+		from public.in_out_date		
+		
+		INNER JOIN	 public.cameras 
+		ON public.in_out_date.cam_id=public.cameras.id
+		and DATE(public.in_out_date.time)=date_f 
+		and public.cameras.cab_id=cab_in
+		and public.cameras.in_pos=pos
+		;
+end;
+$$
+LANGUAGE 'plpgsql'
+-----------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION pass_visits
+		(IN date_f date, IN pass integer,IN cab_in integer)
+	returns TABLE (
+		date_o timestamp,
+		per integer,
+		pas_bool boolean
+	)
+	AS
+$$
+DECLARE
+BEGIN
+	return query				
+		select 
+				
+		public.in_out_date.time as date_o,		
+		public.in_out_date.per_id as per,
+		public.cameras.in_pos as pas_bool
+		
+		from public.in_out_date		
+		
+		INNER JOIN	 public.cameras 
+		ON public.in_out_date.cam_id=public.cameras.id
+		and DATE(public.in_out_date.time)=date_f 
+		and public.cameras.pass_num=pass
+		and public.cameras.cab_id=cab_in
+		;
+end;
+$$
+LANGUAGE 'plpgsql'
+---------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION pass_visits_pos
+		(IN date_f date, IN pass integer,
+		 IN cab_in integer, IN pass_in boolean)
+	returns TABLE (
+		date_o timestamp,
+		per integer,
+		pas_bool boolean
+	)
+	AS
+$$
+DECLARE
+BEGIN
+	return query				
+		select 
+				
+		public.in_out_date.time as date_o,		
+		public.in_out_date.per_id as per,
+		public.cameras.in_pos as pas_bool
+		
+		from public.in_out_date		
+		
+		INNER JOIN	 public.cameras 
+		ON public.in_out_date.cam_id=public.cameras.id
+		and DATE(public.in_out_date.time)=date_f 
+		and public.cameras.pass_num=pass
+		and public.cameras.cab_id=cab_in
+		and public.cameras.in_pos=pass_in
+		;
+end;
+$$
+LANGUAGE 'plpgsql'
+-------------------------------------------------------------------
