@@ -55,7 +55,8 @@ CREATE OR REPLACE FUNCTION cab_visits
 		(IN date_f date,IN cab_in integer)
 	returns TABLE (
 		date_o timestamp,
-		per integer
+		per integer,
+		pos boolean
 	)
 	AS
 $$
@@ -65,7 +66,8 @@ BEGIN
 		select 
 				
 		public.in_out_date.time as date_o,		
-		public.in_out_date.per_id as per
+		public.in_out_date.per_id as per,
+		public.cameras.in_pos as pos
 		
 		from public.in_out_date		
 		
