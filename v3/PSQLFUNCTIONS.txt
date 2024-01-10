@@ -19,7 +19,7 @@ BEGIN
 		INNER JOIN	 public.cameras 
 		ON public.in_out_date.cam_id=public.cameras.id
 		and DATE(public.in_out_date.time)=date_f 
-		
+		and public.in_out_date.per_id=per_in
 		;
 end;
 $$
@@ -44,8 +44,9 @@ BEGIN
 		
 		INNER JOIN	 public.cameras 
 		ON public.in_out_date.cam_id=public.cameras.id
-		and DATE(public.in_out_date.time)=date_f and public.cameras.in_pos=pos_in
-		
+		and DATE(public.in_out_date.time)=date_f 
+		and public.in_out_date.per_id=per_in
+		and public.cameras.in_pos=pos_in
 		;
 end;
 $$
